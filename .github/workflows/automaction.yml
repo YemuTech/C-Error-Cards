@@ -2,25 +2,24 @@ name: 知识图谱更新
 on:
   push:
     branches: [main]
-  schedule:
-    - cron: "0 0 * * *" # 每天UTC时间0点自动运行
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4 # 升级到最新版本
+      - uses: actions/checkout@v4
 
-      - name: 安装Foam
-        run: |
-          npm install -g foam-cli  # 通过npm直接安装
-
-      - name: 生成图谱
-        uses: lannonbr/vsce-action@v1
+      - name: 安装Python环境
+        uses: actions/setup-python@v4
         with:
-          args: foam.graph.show
-        env:
-          VSCODE_VERSION: latest # 自动安装VSCode环境
+          python-version: "3.10"
+
+      - name: 生成知识图谱
+        run: |
+          # 安装依赖
+          pip install markdown-link-extractor
+          # 运行脚本生成图谱
+          python .github/scripts/generate_graph.py
 
       - name: 上传图谱
         uses: actions/upload-artifact@v4
