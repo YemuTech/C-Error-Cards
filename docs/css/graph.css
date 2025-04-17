@@ -1,0 +1,37 @@
+/* 基础布局 */
+body {
+    margin: 0;
+    background: #1a1a1a;
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  #graph-container {
+    width: 100vw;
+    height: 100vh;
+    cursor: grab;
+  }
+  
+  #graph-container:active {
+    cursor: grabbing;
+  }
+  
+  /* 搜索框样式 */
+  .search-box {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    padding: 10px 15px;
+    border: 2px solid #4CAF50;
+    border-radius: 25px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 14px;
+    transition: all 0.3s;
+  }
+  
+  .search-box:focus {
+    outline: none;
+    box-shadow: 0 0 10px #4CAF50;
+  }

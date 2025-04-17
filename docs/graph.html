@@ -2,90 +2,12 @@
 <html>
   <head>
     <title>C语言错误知识图谱</title>
-    <style>
-      #graph {
-        width: 100vw;
-        height: 100vh;
-      }
-      body {
-        margin: 0;
-        background: #1a1a1a;
-        color: white;
-        font-family: Arial;
-      }
-
-      #graph {
-        cursor: grab;
-      }
-
-      #graph:active {
-        cursor: grabbing;
-      }
-
-      input {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        padding: 10px;
-        border: 2px solid #4caf50;
-        border-radius: 5px;
-        background: rgba(0, 0, 0, 0.7);
-        color: white;
-        z-index: 1000;
-      }
-    </style>
+    <link rel="stylesheet" href="./css/graph.css" />
   </head>
   <body>
-    <div id="graph"></div>
+    <input type="text" class="search-box" placeholder="搜索错误类型..." />
+    <div id="graph-container"></div>
     <script src="https://unpkg.com/force-graph"></script>
-    <script>
-      fetch("./graph.json")
-        .then((res) => res.json())
-        .then((data) => {
-          // 正确的挂载方式：将实例绑定到DOM元素
-          ForceGraph()
-            .graphData(data)
-            .nodeLabel("id")
-            .nodeAutoColorBy("group")
-            .linkDirectionalArrowLength(6)
-            .linkDirectionalParticles(2)
-            .width(window.innerWidth)
-            .height(window.innerHeight)(document.getElementById("graph")); // ✅ 正确写法
-        });
-      const graph = ForceGraph()
-        .graphData(data)
-        // 节点样式
-        .nodeLabel((node) => `${node.id} (相关错误数: ${node.linkCount})`)
-        .nodeVal((node) => Math.sqrt(node.linkCount) * 5) // 节点大小基于关联数
-        .nodeColor((node) => `hsl(${node.group * 120}, 70%, 50%)`) // 按分组着色
-        // 连线样式
-        .linkLabel((link) => `关联强度: ${link.value}`)
-        .linkDirectionalParticleWidth(2)
-        .linkDirectionalArrowLength(8)
-        .linkDirectionalArrowRelPos(0.8)
-        .linkColor(() => "rgba(255,255,255,0.4)")
-        // 布局优化
-        .d3AlphaDecay(0.05) // 降低运动衰减速度
-        .d3VelocityDecay(0.2)
-        .cooldownTicks(200)
-        // 交互功能
-        .onNodeHover((node) => {
-          graph.linkVisibility(
-            (link) => link.source === node || link.target === node
-          );
-        })(document.getElementById("graph"));
-
-      // 添加搜索功能
-      const search = document.createElement("input");
-      search.type = "text";
-      search.placeholder = "搜索错误类型...";
-      document.body.prepend(search);
-
-      search.addEventListener("input", () => {
-        graph.nodeVisibility((node) =>
-          node.id.toLowerCase().includes(search.value.toLowerCase())
-        );
-      });
-    </script>
+    <script src="./js/graph.js"></script>
   </body>
 </html>
