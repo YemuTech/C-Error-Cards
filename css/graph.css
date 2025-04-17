@@ -35,3 +35,45 @@ body {
     outline: none;
     box-shadow: 0 0 10px #4CAF50;
   }
+  /* 新增状态提示 */
+.status-bar {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 10px;
+  background: rgba(0,0,0,0.7);
+  color: #4CAF50;
+  border-radius: 5px;
+  z-index: 1000;
+}
+
+/* 模式切换按钮 */
+.mode-switch {
+  position: fixed;
+  top: 60px;
+  left: 20px;
+  z-index: 1000;
+}
+
+.mode-switch button {
+  margin-right: 10px;
+  padding: 8px 15px;
+  background: #4CAF50;
+  border: none;
+  border-radius: 3px;
+  color: white;
+  cursor: pointer;
+}
+
+/* 时间轴容器 */
+.timeline-container {
+  position: fixed;
+  bottom: 30px;
+  left: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+#timeline {
+  width: 100%;
+}

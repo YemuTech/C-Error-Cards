@@ -3,11 +3,22 @@
   <head>
     <title>C语言错误知识图谱</title>
     <link rel="stylesheet" href="./css/graph.css" />
+    <!-- 加载3D依赖 -->
+    <script src="https://unpkg.com/three"></script>
+    <script src="./lib/three-forcegraph.min.js"></script>
   </head>
   <body>
+    <div class="status-bar">正在加载数据...</div>
     <input type="text" class="search-box" placeholder="搜索错误类型..." />
+    <div class="mode-switch">
+      <button onclick="switchMode('3d')">3D模式</button>
+      <button onclick="switchMode('2d')">2D模式</button>
+    </div>
     <div id="graph-container"></div>
-    <script src="https://unpkg.com/force-graph"></script>
+    <div class="timeline-container">
+      <input type="range" id="timeline" min="0" max="100" value="0" />
+    </div>
     <script src="./js/graph.js"></script>
+    <script src="./js/timeline.js"></script>
   </body>
 </html>
