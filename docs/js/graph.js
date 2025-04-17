@@ -49,3 +49,91 @@ fetch('./graph.json')
       );
     });
   });
+  let graphInstance = null;
+let currentMode = '3d';
+
+// 初始化3D图谱
+function init3DGraph(container, data) {
+    return new ThreeForceGraph()
+        .graphData(data)
+        .nodeThreeObject(node => {
+            const sphere = new THREE.Mesh(
+                new THREE.SphereGeometry(5),
+                new THREE.MeshPhongMaterial({
+                    color: new THREE.Color(`hsl(${node.group * 120}, 70%, 50%)`),
+                    transparent: true,
+                    opacity: 0.8
+                })
+            );
+            sphere.userData = node;
+            return sphere;
+        })
+        .linkColor(() => new THREE.Color(0xffffff))
+        .linkOpacity(0.2)
+        .linkWidth(1)
+        .onNodeHover(handleNodeHover)
+        (container);
+}
+
+// 初始化2D图谱
+function init2DGraph(container, data) {
+    return ForceGraph()
+        .graphData(data)
+        .nodeLabel(node => `${node.id} (关联数: ${node.linkCount})`)
+        .nodeVal(node => Math.sqrt(node.linkCount) * 8)
+        .nodeColor(node => `hsl(${node.group * 120}, 70%, 50%)`)
+        .linkDirectionalArrowLength(8)
+        .linkDirectionalParticles(2)
+        .onNodeHover(handleNodeHover)
+        (container);
+}
+
+// 模式切换
+function switchMode(mode) {
+    currentMode = mode;
+    const container = document.getElementById('graph-container');
+    container.innerHTML = ''; // 清空旧实例
+    
+    fetch('./graph.json')
+        .then(res => res.json())
+        .then(data => {
+            graphInstance = currentMode === '3d' 
+                ? init3DGraph(container, data)
+                : init2DGraph(container, data);
+        });
+}
+
+// 初始化加载
+document.addEventListener('DOMContentLoaded', () => {
+    const statusBar = document.querySelector('.status-bar');
+    const searchInput = document.querySelector('.search-box');
+    
+    fetch('./graph.json')
+        .then(res => {
+            if (!res.ok) throw new Error('数据加载失败');
+            return res.json();
+        })
+        .then(data => {
+            statusBar.textContent = `已加载 ${data.nodes.length} 个节点`;
+            switchMode('3d'); // 默认3D模式
+            
+            searchInput.addEventListener('input', () => {
+                const term = searchInput.value.toLowerCase();
+                const hasMatch = data.nodes.some(node => 
+                    node.id.toLowerCase().includes(term)
+                );
+                
+                graphInstance.nodeVisibility(node =>
+                    node.id.toLowerCase().includes(term)
+                );
+                
+                statusBar.textContent = hasMatch 
+                    ? `找到 ${graphInstance.nodeVisibility().length} 个匹配项`
+                    : "无匹配结果";
+            });
+        })
+        .catch(err => {
+            statusBar.textContent = `错误: ${err.message}`;
+            statusBar.style.color = 'red';
+        });
+});
