@@ -1,5 +1,6 @@
 import os
 import json
+import re  # 新增这行
 from glob import glob
 
 def build_graph():
