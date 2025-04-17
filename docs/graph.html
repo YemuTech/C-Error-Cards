@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>C语言错误知识图谱</title>
+    <style>
+      #graph {
+        width: 100vw;
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="graph"></div>
+    <script src="https://unpkg.com/force-graph"></script>
+    <script>
+      fetch("./graph.json")
+        .then((res) => res.json())
+        .then((data) => {
+          // 正确的挂载方式：将实例绑定到DOM元素
+          ForceGraph()
+            .graphData(data)
+            .nodeLabel("id")
+            .nodeAutoColorBy("group")
+            .linkDirectionalArrowLength(6)
+            .linkDirectionalParticles(2)
+            .width(window.innerWidth)
+            .height(window.innerHeight)(document.getElementById("graph")); // ✅ 正确写法
+        });
+    </script>
+  </body>
+</html>

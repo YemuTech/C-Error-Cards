@@ -18,17 +18,10 @@ jobs:
         run: |
           pip install regex
           python .github/scripts/generate_graph.py
+          mv graph.json docs/  # 将数据文件移动到docs目录
 
-      - name: 可视化图谱
-        uses: actions/github-script@v6
+      - name: 部署到GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          script: |
-            const fs = require('fs');
-            const graph = JSON.parse(fs.readFileSync('graph.json'));
-            // 此处可添加可视化代码（见下文扩展方案）
-
-      - name: 上传结果
-        uses: actions/upload-artifact@v4
-        with:
-          name: knowledge-graph
-          path: graph.json
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
