@@ -1,0 +1,20 @@
+# 文件路径：.github/workflows/automation.yml
+name: 知识图谱更新
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: 生成知识图谱
+        uses: docker://foambubble/foam-cli
+        with:
+          args: foam-cli graph --output graph.html
+      - name: 上传图谱
+        uses: actions/upload-artifact@v2
+        with:
+          name: knowledge-graph
+          path: graph.html
