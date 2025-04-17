@@ -3,14 +3,16 @@ on:
   push:
     branches: [main]
 
-permission:
-  contents: write
-
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # 关键！授予写入权限
+
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 必须！允许访问所有分支历史
 
       - name: 安装Python
         uses: actions/setup-python@v4
@@ -21,12 +23,12 @@ jobs:
         run: |
           pip install regex
           python .github/scripts/generate_graph.py
-          mv graph.json docs/  # 将数据文件移动到docs目录
+          mv graph.json docs/
 
       - name: 部署到GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          branch: gh-pages
-          folder: / (root)
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }} # 或使用 personal access token
           publish_dir: ./docs
+          keep_files: true # 保留旧文件
+          force_orphan: false
