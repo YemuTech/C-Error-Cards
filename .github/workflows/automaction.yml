@@ -1,18 +1,24 @@
-# 文件路径：.github/workflows/automation.yml
 name: 知识图谱更新
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: "0 0 * * *" # 每天UTC时间0点自动运行
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4 # 升级到最新版本
+
+      - name: 安装Foam
+        run: |
+          npm install -g foam-cli  # 通过npm直接安装
+
       - name: 生成知识图谱
-        uses: docker://foambubble/foam-cli
-        with:
-          args: npx foam-cli graph --output graph.html # 尝试通过npx调用
+        run: |
+          foam graph --output graph.html  # 生成图谱文件
+
       - name: 上传图谱
         uses: actions/upload-artifact@v4
         with:
