@@ -8,13 +8,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: 生成知识图谱
         uses: docker://foambubble/foam-cli
         with:
           args: foam-cli graph --output graph.html
       - name: 上传图谱
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: knowledge-graph
           path: graph.html
