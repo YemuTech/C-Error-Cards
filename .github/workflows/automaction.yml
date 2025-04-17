@@ -15,9 +15,12 @@ jobs:
         run: |
           npm install -g foam-cli  # 通过npm直接安装
 
-      - name: 生成知识图谱
-        run: |
-          foam graph --output graph.html  # 生成图谱文件
+      - name: 生成图谱
+        uses: lannonbr/vsce-action@v1
+        with:
+          args: foam.graph.show
+        env:
+          VSCODE_VERSION: latest # 自动安装VSCode环境
 
       - name: 上传图谱
         uses: actions/upload-artifact@v4
