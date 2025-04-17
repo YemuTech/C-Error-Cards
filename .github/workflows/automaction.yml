@@ -9,20 +9,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: 安装Python环境
+      - name: 安装Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
-      - name: 生成知识图谱
+      - name: 生成图谱数据
         run: |
-          # 安装依赖
-          pip install markdown-link-extractor
-          # 运行脚本生成图谱
+          pip install regex
           python .github/scripts/generate_graph.py
 
-      - name: 上传图谱
+      - name: 可视化图谱
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const graph = JSON.parse(fs.readFileSync('graph.json'));
+            // 此处可添加可视化代码（见下文扩展方案）
+
+      - name: 上传结果
         uses: actions/upload-artifact@v4
         with:
           name: knowledge-graph
-          path: graph.html
+          path: graph.json
