@@ -7,12 +7,14 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # 关键！授予写入权限
+      contents: write # 必须授权写入权限
+      pages: write
+      id-token: write
 
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # 必须！允许访问所有分支历史
+          fetch-depth: 0 # 必须获取完整历史
 
       - name: 安装Python
         uses: actions/setup-python@v4
@@ -28,7 +30,7 @@ jobs:
       - name: 部署到GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }} # 或使用 personal access token
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }} # 与Secret名称一致
           publish_dir: ./docs
-          keep_files: true # 保留旧文件
-          force_orphan: false
+          keep_files: true
+          allow_empty_commit: true # 允许空提交
